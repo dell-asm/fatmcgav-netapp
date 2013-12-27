@@ -1,0 +1,24 @@
+# Class: netapp
+#
+# This module manages netapp
+#
+# Parameters:
+#
+# Actions:
+#
+# Requires:
+#
+# Sample Usage:
+#
+# [Remember: No empty lines between comments and class definition]
+
+class netapp {
+   lun_create_destroy { '/vol/testVolumeFCoE/testLun8':
+      ensure         		=> 'present',
+      size_bytes            => '20000000',
+      prefix_size_bytes    => '200',
+      ostype                => 'linux',
+      space_res_enabled     => 'true',
+    }
+}
+
