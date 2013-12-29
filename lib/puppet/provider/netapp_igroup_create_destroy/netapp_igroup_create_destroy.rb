@@ -44,7 +44,7 @@ Puppet::Type.type(:netapp_igroup_create_destroy).provide(:netapp_igroup_create_d
   end
 
   def get_destroy_command 
-    arguments = ["initiator-group-name", @resource[:initiatorgroupname]]
+    arguments = ["initiator-group-name", @resource[:name]]
      if @resource[:force] == :true
        arguments +=["force", @resource[:force]] 
      end
@@ -61,7 +61,7 @@ Puppet::Type.type(:netapp_igroup_create_destroy).provide(:netapp_igroup_create_d
 
   def destroy  
     Puppet.debug("Inside destroy method.")
-    lununmap(*get_destroy_command)
+    igroupdestroy(*get_destroy_command)
     igroup_status = get_igroup_status
     Puppet.debug("iGroup existence status after executing destroy operation - #{igroup_status}")
   end
