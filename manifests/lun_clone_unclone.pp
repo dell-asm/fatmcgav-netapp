@@ -6,20 +6,15 @@
 define netapp::lun_clone_unclone (
   $parentlunpath,
   $parentsnap,
-  $snapshot,
-  $volume,
-  $ensure        			   = 'present',
-  $spacereservationenabled      	   =  false,
-  $force      	                           =  false,
+  $ensure                                  = 'present',
+  $spacereservationenabled                 =  false,
 ) {
 
   netapp_lun_clone_unclone { "${name}":
-    ensure        		=> $ensure,
-    parentlunpath      	        => $parentlunpath,
+    ensure                      => $ensure,
+    parentlunpath               => $parentlunpath,
     parentsnap                  => $parentsnap,
-    snapshot                    => $snapshot,
-    volume      		=> $volume,
     spacereservationenabled     => $spacereservationenabled,
-    force                       => $force,
   }
  }
+
