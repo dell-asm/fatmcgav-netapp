@@ -4,13 +4,12 @@
 #
 
 define netapp::lun_online_offline (
-  $ensure        = 'present',
-  $force         = false,
-) {
+        $ensure        = 'present',
+        $force         = false,
+        ) {
 
-
-  netapp_lun_online_offline { "${name}":
-    ensure        => $ensure,
-    force         => $force,
-  }
+    netapp_lun_online_offline { "${name}":
+        ensure        => $ensure,
+        force         => $force,
+    }
 }

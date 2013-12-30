@@ -4,18 +4,14 @@
 #
 
 define netapp::igroup_create_destroy (
-  $initiatorgrouptype,
-  $ensure              = 'present',
-  $ostype              =  '',
-  $bindportset         =  '',
-  $force               = false,
-) {
+        $initiatorgrouptype,
+        $ensure              = 'present',
+        $ostype              =  '',
+        ) {
 
-  netapp_igroup_create_destroy { "${name}":
-    ensure               => $ensure,
-    initiatorgrouptype   => $initiatorgrouptype,
-    ostype               => $ostype,
-    bindportset      	 => $bindportset,
-    force                => $force,
-  }
- }
+    netapp_igroup_create_destroy { "${name}":
+        ensure               => $ensure,
+        initiatorgrouptype   => $initiatorgrouptype,
+        ostype               => $ostype,
+    }
+}

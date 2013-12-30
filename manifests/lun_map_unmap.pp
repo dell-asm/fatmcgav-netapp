@@ -4,16 +4,16 @@
 #
 
 define netapp::lun_map_unmap (
-  $initiatorgroup,
-  $lunid                = '',
-  $ensure        	= 'present',
-  $force                =  true, 
-) {
+        $initiatorgroup,
+        $lunid                = '',
+        $ensure        	= 'present',
+        $force                =  true, 
+        ) {
 
-  netapp_lun_map_unmap { "${name}":
-    ensure            => $ensure,
-    initiatorgroup   => $initiatorgroup,
-    lunid            => $lunid,
-    force      	      => $force,
-  }
- }
+    netapp_lun_map_unmap { "${name}":
+        ensure            => $ensure,
+        initiatorgroup   => $initiatorgroup,
+        lunid            => $lunid,
+        force      	      => $force,
+    }
+}
