@@ -109,22 +109,41 @@ The volume will be able to auto increment, and the NFS export will be persistent
 
 You can also use any of the types individually, or create new defined types as required.
 
-## Contributors
-Thanks to the following people who have helped with this module:
- * Stefan Schulte
- * Gerald Lechner
+Following additional functionalities have been added to the existing NetApp Modules available in the Forge
 
-## TODO
-The following items are yet to be implemented:
+1> LUN Create and Destroy
+2> LUN Offline and Online
+3> LUN Clone and Destroy
+4> iGroup Create and Destroy
+5> LUN Map and UN Map
+6> iGroup Add/Remove initiators
 
- * Data Fabric Manager support
- * Support adding/deleting/modifying cifs shares
- * LDAP and/or AD configuration
- * ???
+## References
+Following functionality related readme's are kept in docs folder.
 
-## Development
+1) lun_create_destroy.md: This readme file talks about following NetApp functionalities.
+   a) Creating LUN
+   b) Deleting the LUN.
+   
+2) lun_online_offline.md: This readme file talks about following NetApp functionalities.
+   a) Bring a LUN online.
+   b) Bring a LUN offline.
+    
+3) lun_clone_destroy.md: This readme file describes following NetApp functionalities.
+   a) Cloning a LUN.
+   b) Destroying a clones LUN.
+   
+4) igroup_create_destroy.md: This readme file talks about following NetApp functionalities.
+   a) Creating an iGroup
+   b) Deleting an iGroup
+   
+5) lun_map_unmap.md: This readme file talks about following NetApp functionalities.
+   a) Mapping a LUN to an iGroup
+   b) UN Mapping a LUn from an iGroup.
 
-The following section applies to developers of this module only.
+6) igroup_add_remove_initiator.md: This readme file talks about following NetApp functionalities.
+   a) Adding an initiator to a iGroup.
+   b) Removing an initiator from an iGroup.
 
 ### Testing
 
