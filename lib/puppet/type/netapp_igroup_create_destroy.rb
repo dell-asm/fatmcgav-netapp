@@ -6,22 +6,16 @@ Puppet::Type.newtype(:netapp_igroup_create_destroy) do
   ensurable
 
   newparam(:name) do
-    desc "Name of iGroup"
+    desc "Name of the iGroup"
   end
 
-  newparam(:initiatorgrouptype) do 
+  newparam(:initiatorgrouptype) do
+    desc "Type of the initiator group" 
   end
   
   newparam(:ostype) do 
-  end
-
-  newparam(:bindportset) do 
-  end
-
-   newparam(:force, :boolean => false) do
-    desc "Forcibly online the lun, disabling mapping onflict checks with the high-availability partner."
-    newvalues(:true, :false)
-    defaultto :false
+    desc "OS type of the initiators within the group"
   end
   
 end
+
