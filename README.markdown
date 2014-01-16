@@ -1,6 +1,6 @@
 # NetApp network device module
 
-**Note: The device configuration management has been changed as of v0.4.0 of this module. 
+**Please note that the device configuration management has been changed as of v0.4.0 of this module. 
 You will therefore need to update your device configuration file if upgrading from a version < 0.4.0.**
 
 **Table of Contents**
@@ -22,7 +22,7 @@ You will therefore need to update your device configuration file if upgrading fr
 The NetApp network device module is designed to add support for managing NetApp filer configuration using Puppet and its Network Device functionality.
 
 The Netapp network device module has been written and tested against NetApp OnTap 8.0.4 7-mode.
-Note: This module may be compatible with other OnTap versions.
+However it may well be compatible with other OnTap versions.
 
 ## Features
 The following items are supported:
@@ -43,26 +43,26 @@ The following items are supported:
  
  
 ## Requirements
-Since a puppet agent cannot be directly installed on the NetApp filers, it can either be managed from the Puppet Master server,
-or through an intermediate proxy system running a puppet agent. The requirements for the proxy system are mentioned below:
+Since we can not directly install a puppet agent on the NetApp filers, it can either be managed from the Puppet Master server,
+or through an intermediate proxy system running a puppet agent. The requirement for the proxy system:
 
  * Puppet 2.7.+
  * NetApp Manageability SDK Ruby libraries
 
 ### NetApp Manageability SDK
 The NetApp Ruby libraries are contained within the NetApp Manageability SDK, currently at v5.0, which is available to download directly from [NetApp](http://support.netapp.com/NOW/cgi-bin/software?product=NetApp+Manageability+SDK&platform=All+Platforms).
-Please note you need a NetApp NOW account to be able to download the SDK.
+Please note you need a NetApp NOW account in order to be able to download the SDK.
 
-Once the SDK is downloaded and extracted, the following files need to be copied onto your Puppet Master:
+Once you have downloaded and extracted the SDK, the following files need to be copied onto your Puppet Master:
 `../lib/ruby/NetApp > [module dir]/netapp/lib/puppet/util/network_device/netapp/`
 
-Once the files have been copied on the Puppet Master, a patch needs to be applied to the *NaServer.rb*.  
+Once the files have been copied into place on your Puppet Master, a patch needs to be applied to *NaServer.rb*.  
 The patch file can be found under `files/NaServer.patch`.  
 To apply, change into the `netapp` module root directory and run:
 	
 	patch lib/puppet/util/network_device/netapp/NaServer.rb < files/NaServer.patch
 
-This must apply the patch without any errors, as below:
+This should apply the patch without any errors, as below:
 
 	$ patch lib/puppet/util/network_device/netapp/NaServer.rb < files/NaServer.patch
 	patching file lib/puppet/util/network_device/netapp/NaServer.rb
@@ -72,11 +72,11 @@ This must apply the patch without any errors, as below:
 ## Usage
 
 ### Device Setup
-To configure a NetApp network device, the device *type* must be `netapp`.
-Either configure the device within */etc/puppet/device.conf* or, preferrably, create an individual config file for each device within a subfolder.
+In order to configure a NetApp network device, the device *type* should be `netapp`.
+You can either configure the device within */etc/puppet/device.conf* or, preferrably, create an individual config file for each device within a subfolder.
 This is preferred as it allows you to run puppet against individual devices, rather than all devices configured...
 
-In order to run Puppet against a single device, use the following command:
+In order to run puppet against a single device, you can use the following command:
 
     puppet device --deviceconfig /etc/puppet/device/[device].conf
 
@@ -86,16 +86,17 @@ Example configuration `/etc/puppet/device/pfiler01.example.com.conf`:
       type netapp
       url https://root:secret@pfiler01.example.com
 
-You can also specify a virtual filer to operate on: Simply
+You can also specify a virtual filer you want to operate on: Simply
 provide the connection information for your physical filer and specify
-an optional path that represents the name of your virtual filer, for example: configuration `/etc/puppet/device/vfiler01.example.com.conf`:
+an optional path that represents the name of your virtual filer. Example
+configuration `/etc/puppet/device/vfiler01.example.com.conf`:
 
     [vfiler01.example.com]
       type netapp
       url https://root:secret@pfiler01.example.com/vfiler01
 
 ### NetApp operations
-As a part of this module, there is a defined type called 'netapp::vqe', which can be used to create a volume, add a qtree and create an NFS export.
+As part of this module, there is a defined type called 'netapp::vqe', which can be used to create a volume, add a qtree and create an NFS export.
 An example of this is:
 
     netapp::vqe { 'volume_name':
@@ -223,7 +224,6 @@ force - (Optional) This parameter forcibly brings the LUN online or offline by d
 ## Contributors
 Thanks to the following people who have helped with this module:
  * Stefan Schulte
- * Gerald Lechner
 
 ## TODO
 The following items are yet to be implemented:
@@ -241,5 +241,3 @@ The following section applies to developers of this module only.
 
 You will need to install the NetApp Manageability SDK Ruby libraries for most of the tests to work.
 How to obtain these files is detailed in the NetApp Manageability SDK section above.
-
-
