@@ -190,6 +190,43 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
     @facts['volume_data'] = JSON.pretty_generate(@volumeMap)
     @facts['total_volumes'] = volume_count
 
+    # Aggregate information
+    @aggr_map = {}
+    @aggr_properties_map = {}
+    aggregate_count = 0
+    result = @transport.invoke("aggr-list-info")
+    aggrlist = result.child_get("aggregates")
+    aggrlist = aggrlist.children_get()
+    aggrlist.each do |aggr|
+      aggregate_count+=1
+      aggrname = aggr.child_get_string("name")
+      @aggr_properties_map['Name'] = aggrname
+      @aggr_properties_map['State'] = aggr.child_get_string("state")
+      @aggr_properties_map['disk-count'] = aggr.child_get_string("disk-count")
+      @aggr_properties_map['Volume-count'] = aggr.child_get_string("volume-count")  
+      @aggr_map["#{aggrname}"] = JSON.pretty_generate(@aggr_properties_map)
+    end
+    @facts['aggregate_data'] = JSON.pretty_generate(@aggr_map)
+    @facts['total_aggregates'] = aggregate_count
+    
+    # Disk information
+    @disk_map = {}
+    @disk_properties_map = {}
+    disk_count = 0
+    result = @transport.invoke("disk-list-info")
+    disklist = result.child_get("disk-details")
+    disklist = disklist.children_get()
+    disklist.each do |disk|
+      disk_count+=1
+      diskname = disk.child_get_string("name")
+      @disk_properties_map['Name'] = diskname
+      @disk_properties_map['serial-number'] = disk.child_get_string("serial-number")
+      @disk_properties_map['disk-model'] = disk.child_get_string("disk-model")
+      @disk_map["#{diskname}"] = JSON.pretty_generate(@disk_properties_map)
+    end
+    @facts['disk_data'] = JSON.pretty_generate(@disk_map)
+    @facts['total_disks'] = disk_count
+    
     # Return array to calling class.
     @facts
   end
