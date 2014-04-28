@@ -9,7 +9,7 @@ Puppet::Type.type(:netapp_share).provide(:netapp_share, :parent => Puppet::Provi
   netapp_commands :slist   => 'cifs-share-list-iter-start'
   netapp_commands :sdel    => 'cifs-share-delete'
   netapp_commands :sadd    => 'cifs-share-add'
-  netapp_commands :smodify => 'cifs-shre-change'
+  netapp_commands :siterate => 'cifs-share-list-iter-next'
   
   mk_resource_methods
 
@@ -17,36 +17,36 @@ Puppet::Type.type(:netapp_share).provide(:netapp_share, :parent => Puppet::Provi
     Puppet.debug("Puppet::Provider::netapp_share: got to self.instances.")
     shares = []
 
-#    # Get a list of all shares
-#    result = slist
-#    Puppet.debug("Share listing data: #{result.inspect}")
-#
-#    # Get a list of exports
-#    cifs_list = result.child_get("cifs-shares")
-#    cifsshares = cifs_list.children_get()
-#    # Itterate through each 'export-info' block.
-#    cifsshares.each do |cifsshare|
-#      cifs-share-info = cifshare.children_get()
-#      cifs-share-info.each do |attributename|
-#        share = { "#{attributename}" => attributename }
-#      end
-#      
-#      # Create the instance and add to exports array.
-#      Puppet.debug("Creating instance for #{share['share-name']}. \n")
-#      shares << new(share)
-#    end
-#  
-#    # Return the final share array. 
-#    Puppet.debug("Returning exports array. #{shares}")
-#    shares
+    result = slist
+    tag = result.child_get_string('tag')
+    record_count = result.child_get_string('records')
+    
+    iterator = siterate('tag',tag,'maximum',record_count)
+    cifs_shares = iterator.child_get("cifs-shares")
+    results_info = cifs_shares.children_get()
+    results_info.each do |cifs_share|
+      cifs_share_info_node = cifs_share.children_get()
+      
+      share = {}
+      share[:name] = cifs_share.child_get_string('share-name')
+      share[:mountpoint] = cifs_share.child_get_string('mount-point')
+      share[:description] = cifs_share.child_get_string('description')
+      share[:ensure] = :present
+      shares << new(share)
+      
+    end
+    shares
   end
   
   def self.prefetch(resources)
     Puppet.debug("Puppet::Provider::netapp_share: Got to self.prefetch.")
     # Itterate instances and match provider where relevant.
     instances.each do |prov|
+      Puppet.debug "Resource information #{resources.inspect}"
       Puppet.debug("Prov.name = #{resources[prov.name]}. ")
       if resource = resources[prov.name]
+        Puppet.debug "Provider name #{prov.name}"
+        Puppet.debug "Resource #{prov}"
         resource.provider = prov
       end
     end
@@ -94,12 +94,13 @@ Puppet::Type.type(:netapp_share).provide(:netapp_share, :parent => Puppet::Provi
   end
   
   def destroy
-    Puppet.debug("Puppet::Provider::netapp_share: destroying Netapp export rule #{@resource[:name]} against path #{@resource[:path]}")
+    Puppet.debug("Puppet::Provider::netapp_share: destroying Netapp share #{@resource[:name]} against path #{@resource[:path]}")
     @property_hash[:ensure] = :absent
   end
 
   def exists?
-    Puppet.debug("Puppet::Provider::netapp_share: checking existance of Netapp export rule #{@resource[:name]}.")
+    Puppet.debug("Puppet::Provider::netapp_share: checking existance of Netapp share #{@resource[:name]}.")
+    Puppet.debug "Ensure value : #{@property_hash.inspect}"
     @property_hash[:ensure] == :present
   end
 
