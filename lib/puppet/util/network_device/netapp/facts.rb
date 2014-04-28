@@ -204,6 +204,11 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
       @aggr_properties_map['State'] = aggr.child_get_string("state")
       @aggr_properties_map['disk-count'] = aggr.child_get_string("disk-count")
       @aggr_properties_map['Volume-count'] = aggr.child_get_string("volume-count")  
+      @aggr_properties_map['size-total'] = aggr.child_get_string("size-total")
+      @aggr_properties_map['size-used'] = aggr.child_get_string("size-used")
+      @aggr_properties_map['size-percentage-used'] = aggr.child_get_string("size-percentage-used")
+      @aggr_properties_map['size-available'] = aggr.child_get_string("size-available")
+        
       @aggr_map["#{aggrname}"] = JSON.pretty_generate(@aggr_properties_map)
     end
     @facts['aggregate_data'] = JSON.pretty_generate(@aggr_map)
