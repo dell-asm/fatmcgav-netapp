@@ -57,6 +57,7 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
     result = @transport.invoke("net-ifconfig-get")
     # Create an empty array to hold interface list
     interfaces = []
+    interface_ips = []
     # Create an empty hash to hold interface_config
     interface_config = {}
 
@@ -81,6 +82,7 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
       interfaces << iface_name
       # Populate interface_config
       interface_config["ipaddress_#{iface_name}"] = iface_ip if iface_ip
+      interface_ips << iface_ip if iface_ip
       interface_config["macaddress_#{iface_name}"] = iface_mac if iface_mac
       interface_config["mtu_#{iface_name}"] = iface_mtu if iface_mtu
       interface_config["netmask_#{iface_name}"] = iface_netmask if iface_netmask
@@ -88,6 +90,7 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
 
     # Add network details to @facts hash
     @facts['interfaces'] = interfaces.join(",")
+    @facts['interface_ips'] = interface_ips.join(",")
     @facts.merge!(interface_config)
     # Copy e0M config into top-level network facts
     @facts['ipaddress']  = @facts['ipaddress_e0M'] if @facts['ipaddress_e0M']
@@ -231,9 +234,7 @@ class Puppet::Util::NetworkDevice::Netapp::Facts
     end
     @facts['disk_data'] = JSON.pretty_generate(@disk_map)
     @facts['total_disks'] = disk_count
-    
     # Return array to calling class.
     @facts
   end
-
 end
