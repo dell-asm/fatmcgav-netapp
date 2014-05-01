@@ -1,5 +1,5 @@
 $:.unshift '../lib/puppet/util/network_device/netapp/'
-require 'NaServer'
+require File.dirname(__FILE__) + '/../lib/puppet/util/network_device/netapp/NaServer'
 
 def print_usage
   print ("Usage: netapp_conn_check.rb <storage_system> <user> <password> \n")
@@ -18,7 +18,7 @@ storage = ARGV[0]
 user = ARGV[1]
 password = ARGV[2]
 failure_exit_code = 1
-success_exit_code = 1
+success_exit_code = 0
 retval = failure_exit_code
 
 s = NaServer.new(storage, 1, 1)
