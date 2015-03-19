@@ -33,6 +33,8 @@ class Puppet::Util::NetworkDevice::Netapp::Device
       Puppet.debug("Puppet::Device::Netapp: vfiler context has been set to #{@vfiler}")
     end
     
+    override_using_credential_id
+
     result = @transport.invoke("system-get-version")
     if(result.results_errno != 0)
       r = result.results_reason
