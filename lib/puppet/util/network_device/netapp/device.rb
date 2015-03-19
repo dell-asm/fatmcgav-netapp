@@ -10,6 +10,9 @@ class Puppet::Util::NetworkDevice::Netapp::Device
 
   def initialize(url, option = {})
     @url = URI.parse(url)
+    @query = Hash.new([])
+    @query = CGI.parse(@url.query) if @url.query
+
     redacted_url = @url.dup
     redacted_url.password = "****" if redacted_url.password
 
@@ -20,7 +23,7 @@ class Puppet::Util::NetworkDevice::Netapp::Device
     raise ArgumentError, "no password specified" unless @url.password
 
     @transport ||= NaServer.new(@url.host, 1, 13)
-	password = URI.decode(asm_decrypt(@url.password))
+    password = URI.decode(asm_decrypt(@url.password))
     @transport.set_admin_user(URI.decode(@url.user), password)
     @transport.set_transport_type(@url.scheme.upcase)
     @transport.set_port(@url.port)
@@ -30,6 +33,8 @@ class Puppet::Util::NetworkDevice::Netapp::Device
       Puppet.debug("Puppet::Device::Netapp: vfiler context has been set to #{@vfiler}")
     end
     
+    override_using_credential_id
+
     result = @transport.invoke("system-get-version")
     if(result.results_errno != 0)
       r = result.results_reason
@@ -40,6 +45,14 @@ class Puppet::Util::NetworkDevice::Netapp::Device
     end
   end
 		
+  def override_using_credential_id
+    if id = @query.fetch('credential_id', []).first
+      require 'asm/cipher'
+      cred = ASM::Cipher.decrypt_credential(id)
+      @transport.set_admin_user(cred.username, cred.password)
+    end
+  end
+
   def facts
     @facts ||= Puppet::Util::NetworkDevice::Netapp::Facts.new(@transport)
     facts = @facts.retrieve
