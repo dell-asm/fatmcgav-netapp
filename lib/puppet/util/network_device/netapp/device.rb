@@ -2,7 +2,6 @@ require 'puppet/util/network_device'
 require 'puppet/util/network_device/netapp/facts'
 require 'puppet/util/network_device/netapp/NaServer'
 require 'uri'
-require '/etc/puppetlabs/puppet/modules/asm_lib/lib/security/encode'
 
 class Puppet::Util::NetworkDevice::Netapp::Device
 
@@ -23,7 +22,6 @@ class Puppet::Util::NetworkDevice::Netapp::Device
     raise ArgumentError, "no password specified" unless @url.password
 
     @transport ||= NaServer.new(@url.host, 1, 13)
-    #password = URI.decode(asm_decrypt(@url.password))
     password = URI.decode(@url.password)
     @transport.set_admin_user(URI.decode(@url.user), password)
     @transport.set_transport_type(@url.scheme.upcase)
