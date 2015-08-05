@@ -202,9 +202,7 @@ Puppet::Type.type(:netapp_export).provide(:netapp_export, :parent => Puppet::Pro
         result = emodify('persistent', @resource[:persistent].to_s, 'rule', rule_list)
       rescue Exception => exc
         if exc.message.downcase.include?("no such file")
-          Puppet.debug "Export operation failed. Need to retry after 10 seconds"
-          sleep(10)
-          result = emodify('persistent', @resource[:persistent].to_s, 'rule', rule_list)
+          Puppet.debug "Export operation failed with error 'no such file'. This can be ignored"
         end
       end
       
