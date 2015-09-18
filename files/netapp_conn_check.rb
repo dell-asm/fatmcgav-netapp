@@ -2,10 +2,10 @@ $:.unshift '../lib/puppet/util/network_device/netapp/'
 require File.dirname(__FILE__) + '/../lib/puppet/util/network_device/netapp/NaServer'
 
 def print_usage
-  print ("Usage: netapp_conn_check.rb <storage_system> <user> <password> \n")
+  print ("Usage: netapp_conn_check.rb <storage_system> <user> \n")
   print ("<storage> -- storage_system\n")
   print ("<user> -- User name\n")
-  print ("<password> -- Password\n")
+  print ("<password> -- Password, can also be environment var 'PASSWORD'\n")
   exit
 end
 
@@ -43,13 +43,16 @@ def is_ip_e0m(ip_address,transport)
 end
 
 args = ARGV.length
-if(args < 3)
+password = ENV['PASSWORD'] || ARGV[2]
+if !password
+  print_usage
+end
+if(args < 2)
   print_usage
 end
 
 storage = ARGV[0]
 user = ARGV[1]
-password = ARGV[2]
 failure_exit_code = 1
 success_exit_code = 0
 retval = failure_exit_code
