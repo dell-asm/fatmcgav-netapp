@@ -58,7 +58,7 @@ Puppet::Type.newtype(:netapp_volume) do
     isrequired
     
     validate do |value|
-      raise ArgumentError, "%s is not a valid snapreserve." % value unless value =~ /^\d+$/
+      raise ArgumentError, "%s is not a valid snapreserve." % value unless value.is_a?(Integer) || value =~ /^\d+$/
       raise ArgumentError, "Puppet::Type::Netapp_volume: Reserved percentage must be between 0 and 100." unless value.to_i.between?(0,100)
     end 
     
